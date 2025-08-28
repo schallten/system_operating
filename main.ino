@@ -2,6 +2,7 @@
 #include "src/display.h"  // Include the display functionality
 #include "src/network.h"  // Include the network functionality
 #include "src/monitor.h" // to get system stats
+#include "src/shell.h" // to parse shell commands
 
 // EXTERNAL AND BOARD LIBRARIES
 #include <SPI.h>
@@ -24,10 +25,16 @@ void setup() {
 
   displayText(getSystemStats().c_str()); // Show available resources
 
+  delay(3000);
+
   // Call the network initialization function
   initializeNetwork();
 
   displayText("Initial setup complete");
+
+  helpCommand();
+  Serial.println("Setup complete.");
+  
 }
 
 void loop() {
