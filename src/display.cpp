@@ -107,7 +107,7 @@ void displayText(const char* text) {
         lines[lineCount++] = currentLine;
     }
     
-    Serial.printf("Total lines: %d, Max lines per screen: %d\n", lineCount, maxLines);
+    //Serial.printf("Total lines: %d, Max lines per screen: %d\n", lineCount, maxLines);
     
     // If all lines fit on screen, display normally
     if (lineCount <= maxLines) {

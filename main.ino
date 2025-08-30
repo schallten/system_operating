@@ -34,6 +34,9 @@ void setup() {
 
   helpCommand();
   Serial.println("Setup complete.");
+
+  delay(3000);
+  sendCommand(); // shell entry
   
 }
 

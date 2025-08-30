@@ -8,7 +8,6 @@
 
 void parseCommand(const String &command);
 void helpCommand();
-void parseShellCommand(const char* command);
-
+void sendCommand();
 
 #endif

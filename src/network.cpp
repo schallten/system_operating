@@ -36,49 +36,51 @@ void initializeConnection(const char* ssid, const char* password) {
 }
 
 void initializeNetwork() {
-  displayText("Initializing Network...");
-  String ssid = "", password = "";
-
-  // Check network connection
-  if (!checkConnection()) {
-    displayText("Could not connect");
-    delay(2000);
-    displayText("Serial monitor baud 9600 for entry");
+    displayText("Network Setup");
+    Serial.println("\nNetwork Setup");
     
-    // Ask for SSID and password via serial monitor
-    while (ssid == "") {
-      if (Serial.available()) {
-        displayText("Enter SSID:");
-        Serial.println("Enter SSID: ");
-        ssid = Serial.readStringUntil('\n');
-        ssid.trim();
-        
-        Serial.println("Enter password for " + ssid + ":");
-        
-        while (password == "") {
-          if (Serial.available()) {
-            password = Serial.readStringUntil('\n');
-            password.trim();
-          }
-        }
-      }
+    while(Serial.available()) { // Clear any leftover serial data
+        Serial.read();
     }
-  }
-
-  // Initialize the connection with SSID and password
-  initializeConnection(ssid.c_str(), password.c_str());
-
-  // Check if the connection was successful
-  if (checkConnection()) {
-    displayText("Network Initialized");
-  } else {
-    displayText("Network Init Failed");
-  }
-
-  delay(2000);
-  displayText("Network setup complete");
+    
+    Serial.println("Enter WiFi SSID:");
+    while(!Serial.available()) { delay(100); }
+    String ssid = Serial.readStringUntil('\n');
+    ssid.trim();
+    
+    // Clear buffer again
+    while(Serial.available()) {
+        Serial.read();
+    }
+    delay(100); // Small delay to ensure buffer is clear
+    
+    Serial.println("Enter WiFi password:");
+    while(!Serial.available()) { delay(100); }
+    String password = Serial.readStringUntil('\n');
+    password.trim();
+    
+    Serial.println("Connecting to WiFi...");
+    displayText("Connecting to WiFi...");
+    
+    WiFi.begin(ssid.c_str(), password.c_str());
+    
+    int attempts = 0;
+    while (WiFi.status() != WL_CONNECTED && attempts < 20) {
+        delay(500);
+        Serial.print(".");
+        attempts++;
+    }
+    
+    if (WiFi.status() == WL_CONNECTED) {
+        String connectedMsg = "Connected to WiFi\nIP: " + WiFi.localIP().toString();
+        Serial.println("\n" + connectedMsg);
+        displayText(connectedMsg.c_str());
+    } else {
+        String failMsg = "Failed to connect to WiFi";
+        Serial.println("\n" + failMsg);
+        displayText(failMsg.c_str());
+    }
 }
-
 
 bool checkConnection() {
     const char* server_host = "8.8.8.8";  // Google's DNS server
@@ -138,4 +140,19 @@ bool httpCheckConnection() {
         displayText("HTTP GET failed");
         return false;
     }
+}
+
+String getWiFiStatus() {
+    String status = "WiFi Status:\n";
+    
+    if (WiFi.status() == WL_CONNECTED) {
+        status += "Connected\n";
+        status += "SSID: " + WiFi.SSID() + "\n";
+        status += "IP: " + WiFi.localIP().toString() + "\n";
+        status += "Signal: " + String(WiFi.RSSI()) + " dBm";
+    } else {
+        status += "Disconnected";
+    }
+    
+    return status;
 }

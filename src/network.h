@@ -8,5 +8,6 @@
 void initializeConnection(const char* ssid,const char* password);
 bool checkConnection();
 void initializeNetwork();
+String getWiFiStatus();
 
 #endif
