@@ -10,7 +10,8 @@
 # Precompiled Headers
 *.gch
 *.pch
-
+.vscode/
+plans/
 # Linker files
 *.ilk
 
@@ -39,3 +40,5 @@
 
 # debug information files
 *.dwo
+.pio/build/project.checksum
+.pio/build/nodemcuv2/idedata.json
