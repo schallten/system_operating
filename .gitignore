@@ -8,6 +8,7 @@
 *.obj
 
 # Precompiled Headers
+.pio/
 *.gch
 *.pch
 .vscode/
