@@ -1,12 +1,10 @@
+// network.cpp
 #include "network.h"
 #include <ESP8266WiFi.h>
 #include <ESPping.h>   // Include the ESPping library
 #include <ESP8266HTTPClient.h>
 #include "display.h"
-
-// Timeout period for connection check (in milliseconds)
-#define CONNECTION_TIMEOUT 5000
-#define MAX_RETRIES 3
+#include "config.h"
 
 void initializeConnection(const char* ssid, const char* password) {
     WiFi.begin(ssid, password);
@@ -83,7 +81,6 @@ void initializeNetwork() {
 }
 
 bool checkConnection() {
-    const char* server_host = "8.8.8.8";  // Google's DNS server
     IPAddress targetIP;
     
     // Check WiFi status
@@ -94,7 +91,7 @@ bool checkConnection() {
     }
     
     // Try to resolve the server IP address (Google)
-    if (WiFi.hostByName(server_host, targetIP)) {
+    if (WiFi.hostByName(PING_SERVER_HOST, targetIP)) {
         // Display the resolved IP address
         String targetIPStr = targetIP.toString();  // Convert IP to String
         Serial.println("DNS resolved: " + targetIPStr);

@@ -1,43 +1,16 @@
-// HEADER FILES CUSTOM
-#include "src/display.h"  // Include the display functionality
-#include "src/network.h"  // Include the network functionality
-#include "src/monitor.h" // to get system stats
-#include "src/shell.h" // to parse shell commands
-
-// EXTERNAL AND BOARD LIBRARIES
-#include <SPI.h>
-#include <ESPping.h>
-#include <ESP8266WiFi.h>
-#include <Arduino.h>
-#include <FS.h>
-#include <Wire.h>
-
+// HEADER FILES CUSTOM - CORE MODULES
+#include "src/core/config.h"    // Include configuration constants
+#include "src/core/init.h"      // Include system initialization
+#include "src/core/shell.h"     // Include shell functionality
 
 void setup() {
-  Serial.begin(9600);
-  initializeDisplay();
-
-  // Show the boot sequence
-  displayBootSequence();
-
-  // Show the "Welcome" message
-  displayWelcomeMessage();
-
-  displayText(getSystemStats().c_str()); // Show available resources
-
-  delay(3000);
-
-  // Call the network initialization function
-  initializeNetwork();
-
-  displayText("Initial setup complete");
-
+  initializeSystem();  // Run complete system initialization
+  
   helpCommand();
   Serial.println("Setup complete.");
 
-  delay(3000);
+  delay(SETUP_COMPLETE_DELAY);
   sendCommand(); // shell entry
-  
 }
 
 void loop() {

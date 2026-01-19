@@ -1,5 +1,6 @@
-#include "display.h"
+// bf.cpp
 #include "bf.h"
+#include "../core/display.h"
 
 #include <Arduino.h>
 #include <FS.h> 

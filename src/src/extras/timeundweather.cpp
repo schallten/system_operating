@@ -1,6 +1,7 @@
-#include "display.h"
-#include "network.h"
+// timeundweather.cpp
 #include "timeundweather.h"
+#include "../core/display.h"
+#include "../core/network.h"
 
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>

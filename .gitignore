@@ -12,7 +12,7 @@
 *.gch
 *.pch
 .vscode/
-plans/
+# plans/
 # Linker files
 *.ilk
 
