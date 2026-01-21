@@ -120,10 +120,10 @@ void displayText(const char* text) {
     }
     
     // Text is too long - implement user-controlled page navigation
-    int totalPages = (lineCount + maxLines - 1) / maxLines; // Ceiling division
+    int totalPages = (lineCount + maxLines - 2) / maxLines; // Ceiling division
     int currentPage = 0;
     
-    Serial.println("\n=== TEXT NAVIGATION ===");
+    Serial.println("\n======================");
     Serial.println("Commands: n (next), p (previous), q (quit)");
     Serial.printf("Total pages: %d\n", totalPages);
     Serial.println("========================");
@@ -245,7 +245,7 @@ bool textNeedsScrolling(const char* text, int textSize) {
 
 // Display the boot sequence
 void displayBootSequence() {
-    displayStaticText("System Operating", 1, 0, 0);
+    displayStaticText("HELOO THERE", 1, 0, 0);
     delay(1000);
     
     displayStaticText("loading...", 1, 0, 16);
