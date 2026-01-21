@@ -43,3 +43,4 @@ plansz/
 *.dwo
 .pio/build/project.checksum
 .pio/build/nodemcuv2/idedata.json
+src/system_operating.ino.cpp

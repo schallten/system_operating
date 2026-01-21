@@ -10,6 +10,7 @@
 
 void initializeSerial() {
     Serial.begin(SERIAL_BAUD);
+    delay(100);  // Wait for serial to stabilize
 }
 
 void runBootSequence() {
