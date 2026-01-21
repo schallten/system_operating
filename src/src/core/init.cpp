@@ -6,6 +6,7 @@
 #include "display.h"
 #include "network.h"
 #include "monitor.h"
+#include "output_handler.h"
 #include <Arduino.h>
 
 void initializeSerial() {
@@ -21,7 +22,7 @@ void runBootSequence() {
     displayWelcomeMessage();
 
     // Display available resources
-    displayText(getSystemStats().c_str());
+    printlnOutput(getSystemStats().c_str());
 
     delay(BOOT_DISPLAY_DELAY);
 }
@@ -40,6 +41,6 @@ void initializeSystem() {
     initializeNetwork();
 
     // Display completion message
-    displayText("Initial setup complete");
+    printlnOutput("Initial setup complete");
     delay(SETUP_COMPLETE_DELAY);
 }

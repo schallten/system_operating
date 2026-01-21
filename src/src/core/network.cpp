@@ -5,19 +5,20 @@
 #include <ESP8266HTTPClient.h>
 #include "display.h"
 #include "config.h"
+#include "output_handler.h"
 
 void initializeConnection(const char* ssid, const char* password) {
     WiFi.begin(ssid, password);
-    displayText("Connecting to Wifi...");
+    printlnOutput("Connecting to Wifi...");
     unsigned long startMillis = millis();
     
     while (WiFi.status() != WL_CONNECTED) {
         delay(500);
-        Serial.print(".");
+        printOutput(".");
         
         if (millis() - startMillis >= CONNECTION_TIMEOUT) {
-            Serial.println("Connection timed out.");
-            displayText("Connection timed out.");
+            printlnOutput("Connection timed out.");
+            printlnOutput("Connection timed out.");
             return;
         }
     }
@@ -25,23 +26,23 @@ void initializeConnection(const char* ssid, const char* password) {
     // Once connected, print the local IP address
     IPAddress localIP = WiFi.localIP();
     String localIPStr = localIP.toString();  // Convert to String
-    Serial.print("Local IP: ");
-    Serial.println(localIP);
-    displayText(localIPStr.c_str());  // Display local IP as const char*
+    printOutput("Local IP: ");
+    printlnOutput(localIP.toString().c_str());
+    printlnOutput(localIPStr.c_str());  // Display local IP as const char*
 
-    displayText("Connected to Wifi");
-    Serial.println("Connected to Wifi");
+    printlnOutput("Connected to Wifi");
+    printlnOutput("Connected to Wifi");
 }
 
 void initializeNetwork() {
-    displayText("Network Setup");
-    Serial.println("\nNetwork Setup");
+    printlnOutput("Network Setup");
+    printlnOutput("\nNetwork Setup");
     
     while(Serial.available()) { // Clear any leftover serial data
         Serial.read();
     }
     
-    Serial.println("Enter WiFi SSID:");
+    printlnOutput("Enter WiFi SSID:");
     while(!Serial.available()) { delay(100); }
     String ssid = Serial.readStringUntil('\n');
     ssid.trim();
@@ -52,31 +53,31 @@ void initializeNetwork() {
     }
     delay(100); // Small delay to ensure buffer is clear
     
-    Serial.println("Enter WiFi password:");
+    printlnOutput("Enter WiFi password:");
     while(!Serial.available()) { delay(100); }
     String password = Serial.readStringUntil('\n');
     password.trim();
     
-    Serial.println("Connecting to WiFi...");
-    displayText("Connecting to WiFi...");
+    printlnOutput("Connecting to WiFi...");
+    printlnOutput("Connecting to WiFi...");
     
     WiFi.begin(ssid.c_str(), password.c_str());
     
     int attempts = 0;
     while (WiFi.status() != WL_CONNECTED && attempts < 20) {
         delay(500);
-        Serial.print(".");
+        printOutput(".");
         attempts++;
     }
     
     if (WiFi.status() == WL_CONNECTED) {
         String connectedMsg = "Connected to WiFi\nIP: " + WiFi.localIP().toString();
-        Serial.println("\n" + connectedMsg);
-        displayText(connectedMsg.c_str());
+        printlnOutput("\n" + connectedMsg);
+        printlnOutput(connectedMsg.c_str());
     } else {
         String failMsg = "Failed to connect to WiFi";
-        Serial.println("\n" + failMsg);
-        displayText(failMsg.c_str());
+        printlnOutput("\n" + failMsg);
+        printlnOutput(failMsg.c_str());
     }
 }
 
@@ -85,8 +86,8 @@ bool checkConnection() {
     
     // Check WiFi status
     if (WiFi.status() != WL_CONNECTED) {
-        Serial.println("WiFi not connected");
-        displayText("WiFi not connected");
+        printlnOutput("WiFi not connected");
+        printlnOutput("WiFi not connected");
         return false;
     }
     
@@ -94,20 +95,20 @@ bool checkConnection() {
     if (WiFi.hostByName(PING_SERVER_HOST, targetIP)) {
         // Display the resolved IP address
         String targetIPStr = targetIP.toString();  // Convert IP to String
-        Serial.println("DNS resolved: " + targetIPStr);
-        displayText(targetIPStr.c_str());  // Display IP address as const char*
+        printlnOutput("DNS resolved: " + targetIPStr);
+        printlnOutput(targetIPStr.c_str());  // Display IP address as const char*
         
         // Ping using ESPping library
         if (Ping.ping(targetIP, 3)) { // Ping target 3 times
-            Serial.println("Ping successful!");
+            printlnOutput("Ping successful!");
             return true;
         } else {
-            Serial.println("Ping failed.");
+            printlnOutput("Ping failed.");
             return false;
         }
     } else {
-        Serial.println("DNS resolution failed.");
-        displayText("DNS resolution failed.");
+        printlnOutput("DNS resolution failed.");
+        printlnOutput("DNS resolution failed.");
         return false;
     }
 }
@@ -124,17 +125,17 @@ bool httpCheckConnection() {
     
     if (httpCode > 0) {
         if (httpCode == HTTP_CODE_OK) {
-            Serial.println("HTTP Connection is active");
-            displayText("HTTP Connection is active");
+            printlnOutput("HTTP Connection is active");
+            printlnOutput("HTTP Connection is active");
             return true;
         } else {
-            Serial.printf("Unexpected HTTP code: %d\n", httpCode);
-            displayText("Unexpected HTTP code");
+            printlnOutput("Unexpected HTTP code");
+            printlnOutput("Unexpected HTTP code");
             return false;
         }
     } else {
-        Serial.printf("HTTP GET failed, error: %s\n", http.errorToString(httpCode).c_str());
-        displayText("HTTP GET failed");
+        printlnOutput("HTTP GET failed");
+        printlnOutput("HTTP GET failed");
         return false;
     }
 }

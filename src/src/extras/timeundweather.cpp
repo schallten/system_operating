@@ -2,6 +2,7 @@
 #include "timeundweather.h"
 #include "../core/display.h"
 #include "../core/network.h"
+#include "../core/output_handler.h"
 
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
@@ -38,23 +39,23 @@ void parseAndDisplayWeather(String response) {
     String predictedTemp = response.substring(tempStart, tempEnd);
 
     String output = "Current Temp: " + currentTemp + "°C\nPredicted Temp: " + predictedTemp + "°C";
-    displayText(output.c_str());
+    printlnOutput(output.c_str());
 }
 
 
 void getWeathDetails(){
-    displayText("Enter city code and api key in serial monitor");
-    Serial.println("Enter city code and api key in serial monitor");
+    printlnOutput("Enter city code and api key in serial monitor");
+    printlnOutput("Enter city code and api key in serial monitor");
     if (Serial.available() > 0){
-        Serial.println("......");
-        Serial.println("Enter city code and country (eg: London,GB)");
+        printlnOutput("......");
+        printlnOutput("Enter city code and country (eg: London,GB)");
         String citycode = Serial.readStringUntil('\n');
         citycode.trim();
-        Serial.println("......");
-        Serial.println("Enter openweather api key : ");
+        printlnOutput("......");
+        printlnOutput("Enter openweather api key : ");
         String apiKey = Serial.readStringUntil('\n');
         apiKey.trim();
-        Serial.println("-- Passing values --");
+        printlnOutput("-- Passing values --");
         getWeather(citycode, apiKey);
     }
 }

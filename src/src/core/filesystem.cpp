@@ -2,6 +2,7 @@
 #include <Arduino.h>
 #include <LittleFS.h>
 #include "filesystem.h"
+#include "output_handler.h"
 
 // variables
 bool firstBoot = false;
@@ -29,10 +30,10 @@ bool createEssentials(bool firstBoot){
 
 bool initFilesystem() {
     if (!LittleFS.begin()) {
-        Serial.println("An error has occurred while mounting LittleFS");
+        printlnOutput("An error has occurred while mounting LittleFS");
         return false;
     } else {
-        Serial.println("LittleFS mounted successfully");
+        printlnOutput("LittleFS mounted successfully");
         return true;
     }
 }
@@ -60,12 +61,12 @@ void list(){
     File root = LittleFS.open(current_dir, "r");
     File file = root.openNextFile();
     while (file) {
-        Serial.print(file.name());
+        printOutput(file.name());
         if (file.isDirectory()) {
-            Serial.println(" <DIR>");
+            printlnOutput(" <DIR>");
         } else {
-            Serial.print(" \t");
-            Serial.println(file.size(), DEC);
+            printOutput(" \t");
+            printlnOutput(String(file.size()));
         }
         file = root.openNextFile();
     }
@@ -75,11 +76,11 @@ void cat(const char* filename){
     String filepath = current_dir + "/" + String(filename);
     File file = LittleFS.open(filepath, "r");
     if (!file){
-        Serial.println("Error opening file for reading");
+        printlnOutput("Error opening file for reading");
         return;
     }
     while (file.available()){
-        Serial.write(file.read());
+        printCharOutput(file.read());
     }
     file.close();
 }
@@ -87,27 +88,27 @@ void cat(const char* filename){
 void removeFile(const char* filename){
     String filepath = current_dir + "/" + String(filename);
     if (LittleFS.remove(filepath)){
-        Serial.println("File removed successfully");
+        printlnOutput("File removed successfully");
     } else {
-        Serial.println("Error removing file");
+        printlnOutput("Error removing file");
     }
 }
 
 void removeFolder(const char* foldername){
     String folderpath = current_dir + "/" + String(foldername);
     if (LittleFS.rmdir(folderpath)){
-        Serial.println("Folder removed successfully");
+        printlnOutput("Folder removed successfully");
     } else {
-        Serial.println("Error removing folder");
+        printlnOutput("Error removing folder");
     }
 }
 
 void makeFolder(const char* foldername){
     String path = current_dir + "/" + String(foldername);
     if (LittleFS.mkdir(path)){
-        Serial.println("Folder created successfully");
+        printlnOutput("Folder created successfully");
     } else {
-        Serial.println("Error creating folder");
+        printlnOutput("Error creating folder");
     }
 }
 
@@ -119,9 +120,9 @@ void changeDirectory(const char* path){
     File dir = LittleFS.open(newPath, "r");
     if (dir && dir.isDirectory()){
         current_dir = newPath;
-        Serial.println("Directory changed to " + current_dir);
+        printlnOutput("Directory changed to " + current_dir);
     } else {
-        Serial.println("Directory does not exist");
+        printlnOutput("Directory does not exist");
     }
 }
 
@@ -129,10 +130,10 @@ void createFile(const char* filename){
     String filepath = current_dir + "/" + String(filename);
     File file = LittleFS.open(filepath,"w");
     if (file){
-        Serial.println("File created successfully");
+        printlnOutput("File created successfully");
         file.close();
     } else {
-        Serial.println("Error creating file");
+        printlnOutput("Error creating file");
     }
 }
 
@@ -141,10 +142,10 @@ void lexa(const char* filename, const char* content){
     File file = LittleFS.open(filepath, "w");
     if (file){
         file.print(String(content));
-        Serial.println("File written successfully");
+        printlnOutput("File written successfully");
         file.close();
     } else {
-        Serial.println("Error opening file for writing");
+        printlnOutput("Error opening file for writing");
     }
 }
 
@@ -155,19 +156,19 @@ void copyFile(const char* source,const char* destination){
     String destPath = current_dir + "/" + String(destination);
     File srcFile = LittleFS.open(srcPath, "r");
     if (!srcFile){
-        Serial.println("Source file does not exist");
+        printlnOutput("Source file does not exist");
         return;
     }
     File destFile = LittleFS.open(destPath, "w");
     if (!destFile){
-        Serial.println("Error creating destination file");
+        printlnOutput("Error creating destination file");
         srcFile.close();
         return;
     }
     while (srcFile.available()){
         destFile.write(srcFile.read());
     }
-    Serial.println("File copied successfully");
+    printlnOutput("File copied successfully");
     srcFile.close();
     destFile.close();
 }
@@ -176,14 +177,14 @@ void moveFile(const char* source, const char* destination){
     String srcPath = current_dir + "/" + String(source);
     String destPath = current_dir + "/" + String(destination);
     if (LittleFS.rename(srcPath, destPath)){
-        Serial.println("File moved/renamed successfully");
+        printlnOutput("File moved/renamed successfully");
     } else {
-        Serial.println("Error moving/renaming file");
+        printlnOutput("Error moving/renaming file");
     }
 }
 
 void printWorkingDirectory(){
-    Serial.println("Current Directory: " + current_dir);
+    printlnOutput("Current Directory: " + current_dir);
 }
 
 

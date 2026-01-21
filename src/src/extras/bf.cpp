@@ -1,6 +1,7 @@
 // bf.cpp
 #include "bf.h"
 #include "../core/display.h"
+#include "../core/output_handler.h"
 
 #include <Arduino.h>
 #include <FS.h> 
@@ -40,13 +41,13 @@ void interpret(const char* program){
                 (*pointer)--;
                 break;
             case '.': // output the character at current memory cell
-                Serial.write(*pointer);
+                printCharOutput(*pointer);
                 final+=char(*pointer); // adding to the final string
                 break;
             case ',': // input a character and store it in current memory cell
                 while (Serial.available()==0); // wait for input
-                Serial.println("Please enter a character:");
-                displayText("Please input data in serial monitor");
+                printlnOutput("Please enter a character:");
+                printlnOutput("Please input data in serial monitor");
                 *pointer = Serial.read();
                 break;
             case '[': // if current cell value is zero , jump to command after the matching closing bracket that is ']'
@@ -82,21 +83,21 @@ void interpret(const char* program){
 
 void runBFProgram(){
     String code;
-    displayText("Please enter your brainfuck code in the serial monitor");
-    Serial.println("Please enter your brainfuck code below : ");
+    printlnOutput("Please enter your brainfuck code in the serial monitor");
+    printlnOutput("Please enter your brainfuck code below : ");
     while (code.length()==0){
         if (Serial.available()>0){
             code = Serial.readStringUntil('\n'); // read the input until newline character  
             code.trim(); // remove any leading or trailing whitespace
         }
     }
-    Serial.println("Running your brainfuck code...");
-    displayText("Running your brainfuck code .. ");
+    printlnOutput("Running your brainfuck code...");
+    printlnOutput("Running your brainfuck code .. ");
     interpret(code.c_str()); // pass code to interpretor
-    Serial.println("\nProgram finished executing.");
-    Serial.println("Final Output: " + final);
+    printlnOutput("\nProgram finished executing.");
+    printlnOutput("Final Output: " + final);
     String realfinal = "bf output :\n" + final;
-    displayText(realfinal.c_str());
+    printlnOutput(realfinal.c_str());
     final=""; // reset final for next run
-    Serial.println("Your output is " + realfinal);
+    printlnOutput("Your output is " + realfinal);
 }

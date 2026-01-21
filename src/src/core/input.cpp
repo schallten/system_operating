@@ -3,8 +3,9 @@
 
 #include "input.h"
 #include "config.h"
-#include "commands.h"
+#include "shell.h"
 #include "display.h"
+#include "output_handler.h"
 #include <Arduino.h>
 
 static bool lastCommandWasQ = false;
@@ -27,20 +28,20 @@ void processShellInput() {
     
     if (command == "q") {
         lastCommandWasQ = true;
-        displayText("Waiting for next command...");
+        printlnOutput("Waiting for next command...");
     } else if (command == "n" || command == "p") {
         // Display navigation flags - do nothing (handled by display)
     } else if (lastCommandWasQ) {
         lastCommandWasQ = false;
         parseCommand(command);
     } else {
-        displayText("Please enter 'q' first before entering a command.");
+        printlnOutput("Please enter 'q' first before entering a command.");
     }
 }
 
 void sendCommand() {
-    displayText("You are now in the shell\nLook at serial monitor for input\nFirst press 'q' to exit display mode");
-    Serial.println("You are now in the shell. First press 'q' to exit display mode, then enter your command.");
+    printlnOutput("You are now in the shell\nLook at serial monitor for input\nFirst press 'q' to exit display mode");
+    printlnOutput("You are now in the shell. First press 'q' to exit display mode, then enter your command.");
     
     while (true) {
         processShellInput();
