@@ -22,9 +22,10 @@ void runBootSequence() {
     displayWelcomeMessage();
 
     // Display available resources
-    printlnOutput(getSystemStats().c_str());
+    // printlnOutput(getSystemStats().c_str()); removing cuz neededd really as i will shift to memory allocation on the go instead of pre allocation
+    printlnOutput("Boot sequence complete");
 
-    delay(BOOT_DISPLAY_DELAY);
+    delay(BOOT_DISPLAY_DELAY); 
 }
 
 void initializeSystem() {
@@ -32,13 +33,17 @@ void initializeSystem() {
     initializeSerial();
     
     // Initialize display
-    initializeDisplay();
+    if (graphics == 1){
+        initializeDisplay();
+    }else{
+        printlnOutput("Graphics mode disabled, skipping display initialization.");
+    }
 
     // Run boot sequence
     runBootSequence();
 
     // Initialize network
-    initializeNetwork();
+    // initializeNetwork(); will switch to manual wifi allotment just in case user wants offline work too
 
     // Display completion message
     printlnOutput("Initial setup complete");

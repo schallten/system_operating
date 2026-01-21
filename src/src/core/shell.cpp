@@ -20,3 +20,18 @@ void parseCommand(const String &command) {
     
     executeCommand(command);
 }
+
+void sendCommand(){
+    printlnOutput("welcome to the shell");
+    printlnOutput("Type 'help' to see available commands.");
+    while (true) {
+        printlnOutput("Enter command:");
+        while (Serial.available() == 0) {
+            delay(100); // wait for user input
+        }
+        String command = Serial.readStringUntil('\n');
+        command.trim();
+        
+        parseCommand(command);
+    }
+}

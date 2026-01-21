@@ -1,4 +1,5 @@
 // display.cpp
+// this seriously needs a lot of understanding and cleanup and all that , which  i wont focus on right now as i will do all work with serial monitor
 #include "display.h"
 #include "config.h"
 #include "output_handler.h"
