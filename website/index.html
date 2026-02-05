@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Operating - Microcontroller OS Project</title>
+    <meta name="description"
+        content="System Operating - A lightweight pseudo-operating system for ESP8266/ESP32 microcontrollers">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>System Operating</h1>
+        <p>A Lightweight Pseudo-OS for Microcontrollers</p>
+    </header>
+
+    <nav>
+        <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#commands">Commands</a></li>
+            <li><a href="#download">Download</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <section id="about">
+            <h2>About System Operating</h2>
+            <p>
+                <strong>System Operating</strong> is an educational project that brings operating system concepts to
+                microcontrollers.
+                Built for the ESP8266 and ESP32 platforms, it provides a Unix-like shell environment with file system
+                support,
+                network connectivity, and extensible application modules.
+            </p>
+
+            <div class="info-box">
+                <strong>Status:</strong> Early Development (Unstable)<br>
+                <strong>Target Hardware:</strong> ESP8266 NodeMCU, ESP32<br>
+                <strong>Display:</strong> OLED (SSD1306 compatible)<br>
+                <strong>File System:</strong> LittleFS
+            </div>
+
+            <h3>Project Goals</h3>
+            <ul>
+                <li>Learn operating system fundamentals through hands-on implementation</li>
+                <li>Create a functional shell environment on resource-constrained hardware</li>
+                <li>Implement file system operations (create, read, write, delete)</li>
+                <li>Support modular applications and interpreters</li>
+                <li>Provide network services (WiFi, NTP, weather data)</li>
+            </ul>
+        </section>
+
+        <section id="features">
+            <h2>Core Features</h2>
+
+            <div class="feature-grid">
+                <div class="feature-box">
+                    <h4>Shell Interface</h4>
+                    <p>Interactive command-line interface accessible via serial monitor. Parse and execute commands with
+                        argument support.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>File System (LittleFS)</h4>
+                    <p>Full Unix-like file operations: navigate directories, create/delete files, copy/move files, and
+                        edit text files.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>Network Stack</h4>
+                    <p>WiFi connectivity with status monitoring, network time synchronization (NTP), and external API
+                        integration.</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4>System Monitor</h4>
+                    <p>Real-time system statistics including heap memory usage, uptime tracking, and hardware
+                        information.</p>
+                </div>
+            </div>
+
+            <h3>Application Modules</h3>
+            <ul>
+                <li><strong>Brainfuck Interpreter:</strong> Run Brainfuck programs directly on the microcontroller</li>
+                <li><strong>Weather Service:</strong> Fetch and display current weather conditions via API</li>
+                <li><strong>Time & Date:</strong> Network time protocol (NTP) synchronization</li>
+                <li><strong>ELIN Language:</strong> Custom stack-based programming language with compiler and VM (in
+                    development) - <a href="https://schallten.github.io/elin/" target="_blank">View Documentation</a>
+                </li>
+            </ul>
+        </section>
+
+        <section id="commands">
+            <h2>Available Commands</h2>
+
+            <h3>File System Commands</h3>
+            <table>
+                <tr>
+                    <th>Command</th>
+                    <th>Description</th>
+                    <th>Example</th>
+                </tr>
+                <tr>
+                    <td><code>ls</code></td>
+                    <td>List files and directories</td>
+                    <td><code>ls</code></td>
+                </tr>
+                <tr>
+                    <td><code>cd [path]</code></td>
+                    <td>Change directory</td>
+                    <td><code>cd /home</code></td>
+                </tr>
+                <tr>
+                    <td><code>pwd</code></td>
+                    <td>Print working directory</td>
+                    <td><code>pwd</code></td>
+                </tr>
+                <tr>
+                    <td><code>cat [file]</code></td>
+                    <td>Display file contents</td>
+                    <td><code>cat readme.txt</code></td>
+                </tr>
+                <tr>
+                    <td><code>touch [file]</code></td>
+                    <td>Create new file</td>
+                    <td><code>touch notes.txt</code></td>
+                </tr>
+                <tr>
+                    <td><code>mkdir [dir]</code></td>
+                    <td>Create directory</td>
+                    <td><code>mkdir projects</code></td>
+                </tr>
+                <tr>
+                    <td><code>rm [file]</code></td>
+                    <td>Remove file</td>
+                    <td><code>rm temp.txt</code></td>
+                </tr>
+                <tr>
+                    <td><code>rmdir [dir]</code></td>
+                    <td>Remove directory</td>
+                    <td><code>rmdir old_folder</code></td>
+                </tr>
+                <tr>
+                    <td><code>cp [src] [dst]</code></td>
+                    <td>Copy file</td>
+                    <td><code>cp file.txt backup.txt</code></td>
+                </tr>
+                <tr>
+                    <td><code>mv [src] [dst]</code></td>
+                    <td>Move/rename file</td>
+                    <td><code>mv old.txt new.txt</code></td>
+                </tr>
+                <tr>
+                    <td><code>lexa [file] [content]</code></td>
+                    <td>Write to file</td>
+                    <td><code>lexa test.txt Hello World</code></td>
+                </tr>
+            </table>
+
+            <h3>System Commands</h3>
+            <table>
+                <tr>
+                    <th>Command</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><code>help</code></td>
+                    <td>Display available commands</td>
+                </tr>
+                <tr>
+                    <td><code>stats</code></td>
+                    <td>Show system statistics (memory, uptime)</td>
+                </tr>
+                <tr>
+                    <td><code>wifi</code></td>
+                    <td>Display WiFi connection status</td>
+                </tr>
+                <tr>
+                    <td><code>weather</code></td>
+                    <td>Fetch current weather data</td>
+                </tr>
+                <tr>
+                    <td><code>bf</code></td>
+                    <td>Run Brainfuck interpreter</td>
+                </tr>
+            </table>
+
+            <h3>Example Session</h3>
+            <pre>
+> stats
+Heap: 24512 bytes free
+Uptime: 00:02:34
+
+> mkdir projects
+Folder created successfully
+
+> cd projects
+Directory changed to /projects
+
+> touch readme.txt
+File created successfully
+
+> lexa readme.txt This is a test file
+File written successfully
+
+> cat readme.txt
+This is a test file
+
+> pwd
+Current Directory: /projects
+            </pre>
+        </section>
+
+        <section id="download">
+            <h2>Get Started</h2>
+
+            <h3>Hardware Requirements</h3>
+            <ul>
+                <li>ESP8266 NodeMCU or ESP32 development board</li>
+                <li>OLED Display (SSD1306, 128x64 recommended)</li>
+                <li>USB cable for programming and serial communication</li>
+            </ul>
+
+            <h3>Software Requirements</h3>
+            <ul>
+                <li>Arduino IDE or PlatformIO</li>
+                <li>ESP8266/ESP32 board support package</li>
+                <li>Required libraries: LittleFS, Adafruit_SSD1306, WiFi</li>
+            </ul>
+
+            <a href="https://github.com/schallten/system_operating" class="btn">View on GitHub</a>
+            <a href="https://github.com/schallten/system_operating/archive/refs/heads/main.zip" class="btn">Download
+                Source</a>
+        </section>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 System Operating Project</p>
+    </footer>
+</body>
+
+</html>
