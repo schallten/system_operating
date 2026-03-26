@@ -6,12 +6,10 @@
 #include <string>
 #include <LittleFS.h>
 
-std::string fileLocation = "/home/config.txt"; // called after filesystem is done
+extern const std::string fileLocation;
 
 bool isConfigPresent();
 bool generateDefaultConfig();
 bool validateConfig();
-
-
 
 #endif

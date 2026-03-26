@@ -3,6 +3,7 @@
 #include <LittleFS.h>
 #include "filesystem.h"
 #include "output_handler.h"
+#include "../architecture/config_file.h"
 
 // variables
 bool firstBoot = false;
@@ -21,6 +22,10 @@ bool createEssentials(bool firstBoot){
             historyFile.println("// Command History File");
             historyFile.close();
         }
+        
+        // Generate Tonic Configuration
+        generateDefaultConfig();
+        
         return true;
     }
     else {
