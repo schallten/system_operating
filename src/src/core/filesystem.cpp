@@ -38,7 +38,7 @@ bool initFilesystem() {
     }
 }
 
-void initalizeSystem(){
+void setupFilesystemFolders(){
     // first we will create the donotdelete.txt while will contain : 1 for true ( means os is not booting for the first time ) and 0 for false ( means os is booting for the first time )
     File configFile = LittleFS.open("/donotdelete.txt", "r");
     if (!configFile) {

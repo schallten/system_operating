@@ -7,6 +7,7 @@
 #include "network.h"
 #include "monitor.h"
 #include "output_handler.h"
+#include "filesystem.h"
 #include <Arduino.h>
 
 void initializeSerial() {
@@ -38,6 +39,11 @@ void initializeSystem() {
         initializeDisplay();
     }else{
         printlnOutput("Graphics mode disabled, skipping display initialization.");
+    }
+
+    // Initialize filesystem
+    if (initFilesystem()) {
+        setupFilesystemFolders();
     }
 
     // Run boot sequence

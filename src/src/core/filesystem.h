@@ -2,10 +2,10 @@
 #define FILESYSTEM_H
 
 
-void initalizeSystem(); // ran on only first run of the os to create all needed files and folders needed for os
+void setupFilesystemFolders(); // ran on only first run of the os to create all needed files and folders needed for os
 bool initFilesystem(); // initializes the filesystem
 bool createEssentials(bool firstBoot);
-void list(); // lits files in current directory // like ls command in linux tbh
+void list(); // lists files in current directory // like ls command in linux tbh
 void cat(const char* filename); // prints file contents to serial monitor
 void removeFile(const char* filename); // removes a file
 void removeFolder(const char* foldername); // removes a folder

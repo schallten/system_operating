@@ -33,4 +33,7 @@ void displayBootSequence();
 void displayPage(String lines[], int lineCount, int maxLines, int page, int totalPages);
 void displayWelcomeMessage();
 
+// Clear the display and serial monitor
+void clearScreen();
+
 #endif

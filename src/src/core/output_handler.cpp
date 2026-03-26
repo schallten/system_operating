@@ -6,7 +6,7 @@
 #include <Arduino.h>
 
 // Global graphics mode: 0 = serial, 1 = display
-int graphics = 0;
+int graphics = 1;
 
 void printOutput(const String &text) {
     if (graphics == 1) {
@@ -26,8 +26,14 @@ void printOutput(const char* text) {
 
 void printlnOutput(const String &text) {
     if (graphics == 1) {
-        String withNewline = text + "\n";
-        displayText(withNewline.c_str());
+        // In graphics mode, we let the display handler handle the newline logic
+        // but we add it if it's not there to ensure we move to next line
+        if (text.endsWith("\n")) {
+            displayText(text.c_str());
+        } else {
+            String withNewline = text + "\n";
+            displayText(withNewline.c_str());
+        }
     } else {
         Serial.println(text);
     }
@@ -35,8 +41,13 @@ void printlnOutput(const String &text) {
 
 void printlnOutput(const char* text) {
     if (graphics == 1) {
-        String withNewline = String(text) + "\n";
-        displayText(withNewline.c_str());
+        String t = String(text);
+        if (t.endsWith("\n")) {
+            displayText(text);
+        } else {
+            String withNewline = t + "\n";
+            displayText(withNewline.c_str());
+        }
     } else {
         Serial.println(text);
     }

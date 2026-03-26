@@ -10,6 +10,7 @@
 #include "output_handler.h"
 #include "../extras/timeundweather.h"
 #include "../extras/bf.h"
+#include "../architecture/system_details.h"
 #include <Arduino.h>
 
 void executeCommand(const String &command) {
@@ -19,12 +20,21 @@ void executeCommand(const String &command) {
     String args = (spaceIndex == -1) ? "" : command.substring(spaceIndex + 1);
     
     if (cmd == "help") {
-        printlnOutput("Available commands: \n help: shows this message \n stats: shows system stats \n wifi: shows wifi status \n weather : display weather (needs credentials) \n bf: run brainfuck code \n ls: list files \n pwd: print working directory \n cd: change directory \n cat: display file contents \n mkdir: make folder \n touch: create file \n rm: remove file \n rmdir: remove folder \n cp: copy file \n mv: move/rename file \n lexa: edit/write to file");
+        printlnOutput("Available commands: \n help: shows this message \n clear: clear the screen \n stats: shows system stats \n wifi: shows wifi status \n wifi setup: setup wifi \n weather : display weather (needs credentials) \n bf: run brainfuck code \n ls: list files \n pwd: print working directory \n cd: change directory \n cat: display file contents \n mkdir: make folder \n touch: create file \n rm: remove file \n rmdir: remove folder \n cp: copy file \n mv: move/rename file \n lexa: edit/write to file");
         
+    } else if (cmd == "clear") {
+        clearScreen();
     } else if (cmd == "stats") {
+        String details = "OS Name: " + String(SystemDetails::getOSName().c_str()) + "\n";
+        details += "OS Version: " + String(SystemDetails::getOSVersion().c_str()) + "\n";
+        printlnOutput(details);
         printlnOutput(getSystemStats().c_str());
     } else if (cmd == "wifi") {
-        printlnOutput(getWiFiStatus().c_str());
+        if (args == "setup") {
+            initializeNetwork();
+        } else {
+            printlnOutput(getWiFiStatus().c_str());
+        }
     } else if (cmd == "weather") {
         getWeathDetails();
     } else if (cmd == "bf") {

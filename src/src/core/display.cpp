@@ -83,7 +83,9 @@ void displayConsole(const char* text) {
         consoleBuffer[0] = "";
     }
 
-    while (lastPos < input.length() || input.length() == 0) {
+    if (input.length() == 0) return;
+
+    while (lastPos < input.length()) {
         int pos = input.indexOf('\n', lastPos);
         String linePart;
         bool hasNewline = (pos != -1);
@@ -113,22 +115,32 @@ void displayConsole(const char* text) {
                 // currentConsoleLine stays at MAX_CONSOLE_LINES
             }
         }
-        
-        if (input.length() == 0) break; // Handle empty string case
     }
 
     // Draw the buffer
     display.clearDisplay();
     display.setTextSize(1);
     display.setTextColor(WHITE);
-    display.setCursor(0, 0);
-    // Draw all lines except the current one if it's empty and we have others
-    int linesToDraw = currentConsoleLine;
-    for (int i = 0; i < linesToDraw; i++) {
+    for (int i = 0; i < currentConsoleLine; i++) {
         display.setCursor(0, i * 8);
         display.print(consoleBuffer[i]);
     }
     display.display();
+}
+
+void clearScreen() {
+    // Clear OLED
+    display.clearDisplay();
+    display.display();
+    
+    // Reset console buffer
+    for (int i = 0; i < MAX_CONSOLE_LINES; i++) {
+        consoleBuffer[i] = "";
+    }
+    currentConsoleLine = 1;
+    
+    // Clear Serial Monitor (ANSI escape sequence)
+    Serial.print("\033[2J\033[H");
 }
 
 // User-controlled text display with page navigation
