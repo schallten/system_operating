@@ -12,6 +12,8 @@ void initializeDisplay();
 
 // Main text display function - auto-scrolls if text is too long
 void displayText(const char* text);
+void displayConsole(const char* text);
+void displayPaginated(const char* text);
 
 // Universal display function with full control
 void universalDisplay(const char* text, int textSize, int xPos, int yPos, bool clearBefore = true, bool scroll = false, unsigned long scrollDelay = 100, unsigned long displayDelay = 0);

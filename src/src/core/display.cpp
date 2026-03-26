@@ -68,8 +68,71 @@ void displayPage(String lines[], int lineCount, int maxLines, int page, int tota
     display.display();
 }
 
+// Console-like scrolling display buffer
+#define MAX_CONSOLE_LINES 8
+String consoleBuffer[MAX_CONSOLE_LINES];
+int currentConsoleLine = 0;
+
+void displayConsole(const char* text) {
+    String input = String(text);
+    int lastPos = 0;
+    
+    // If the buffer is empty, initialize the first line
+    if (currentConsoleLine == 0 && MAX_CONSOLE_LINES > 0) {
+        currentConsoleLine = 1;
+        consoleBuffer[0] = "";
+    }
+
+    while (lastPos < input.length() || input.length() == 0) {
+        int pos = input.indexOf('\n', lastPos);
+        String linePart;
+        bool hasNewline = (pos != -1);
+        
+        if (hasNewline) {
+            linePart = input.substring(lastPos, pos);
+            lastPos = pos + 1;
+        } else {
+            linePart = input.substring(lastPos);
+            lastPos = input.length();
+        }
+
+        // Append the part to the current line
+        consoleBuffer[currentConsoleLine - 1] += linePart;
+
+        // If we hit a newline or the line is too long, move to next line
+        if (hasNewline || consoleBuffer[currentConsoleLine - 1].length() >= 21) {
+            if (currentConsoleLine < MAX_CONSOLE_LINES) {
+                currentConsoleLine++;
+                consoleBuffer[currentConsoleLine - 1] = "";
+            } else {
+                // Scroll up
+                for (int i = 0; i < MAX_CONSOLE_LINES - 1; i++) {
+                    consoleBuffer[i] = consoleBuffer[i + 1];
+                }
+                consoleBuffer[MAX_CONSOLE_LINES - 1] = "";
+                // currentConsoleLine stays at MAX_CONSOLE_LINES
+            }
+        }
+        
+        if (input.length() == 0) break; // Handle empty string case
+    }
+
+    // Draw the buffer
+    display.clearDisplay();
+    display.setTextSize(1);
+    display.setTextColor(WHITE);
+    display.setCursor(0, 0);
+    // Draw all lines except the current one if it's empty and we have others
+    int linesToDraw = currentConsoleLine;
+    for (int i = 0; i < linesToDraw; i++) {
+        display.setCursor(0, i * 8);
+        display.print(consoleBuffer[i]);
+    }
+    display.display();
+}
+
 // User-controlled text display with page navigation
-void displayText(const char* text) {
+void displayPaginated(const char* text) {
     const int charWidth = 6;
     const int lineHeight = 8;
     const int charsPerLine = SCREEN_WIDTH / charWidth;
@@ -105,9 +168,7 @@ void displayText(const char* text) {
         lines[lineCount++] = currentLine;
     }
     
-    //Serial.printf("Total lines: %d, Max lines per screen: %d\n", lineCount, maxLines);
-    
-    // If all lines fit on screen, display normally
+    // If all lines fit on screen, display using console-like logic
     if (lineCount <= maxLines) {
         display.clearDisplay();
         display.setTextSize(1);
@@ -122,81 +183,47 @@ void displayText(const char* text) {
     }
     
     // Text is too long - implement user-controlled page navigation
-    int totalPages = (lineCount + maxLines - 2) / maxLines; // Ceiling division
+    int totalPages = (lineCount + maxLines - 1) / maxLines; 
     int currentPage = 0;
     
-    Serial.println("\n======================");
+    Serial.println("\n--- Paging Mode ---");
     Serial.println("Commands: n (next), p (previous), q (quit)");
-    Serial.printf("Total pages: %d\n", totalPages);
-    Serial.println("========================");
     
     bool quitNavigation = false;
-    
     while (!quitNavigation) {
-        // Display current page
         displayPage(lines, lineCount, maxLines, currentPage, totalPages);
-        
-        Serial.printf("Page %d/%d - [n]ext, [p]rev, [q]uit: ", currentPage + 1, totalPages);
         
         // Wait for user input with timeout
         unsigned long startTime = millis();
         bool gotInput = false;
         
-        while (!gotInput && millis() - startTime < 10000) { // 10 second timeout
+        while (!gotInput && millis() - startTime < 10000) {
             if (Serial.available()) {
                 char input = Serial.read();
-                Serial.println(input); // Echo the input
-                
-                switch (input) {
-                    case 'n': // Next page
-                    case 'N':
-                        if (currentPage < totalPages - 1) {
-                            currentPage++;
-                        } else {
-                            Serial.println("Already on last page");
-                        }
-                        gotInput = true;
-                        break;
-                        
-                    case 'p': // Previous page
-                    case 'P':
-                        if (currentPage > 0) {
-                            currentPage--;
-                        } else {
-                            Serial.println("Already on first page");
-                        }
-                        gotInput = true;
-                        break;
-                        
-                    case 'q': // Quit navigation
-                    case 'Q':
-                        quitNavigation = true;
-                        gotInput = true;
-                        Serial.println("Exiting navigation");
-                        break;
-                        
-                    default:
-                        Serial.println("Invalid command. Use n, p, or q");
-                        break;
+                if (input == 'n' || input == 'N') {
+                    if (currentPage < totalPages - 1) currentPage++;
+                    gotInput = true;
+                } else if (input == 'p' || input == 'P') {
+                    if (currentPage > 0) currentPage--;
+                    gotInput = true;
+                } else if (input == 'q' || input == 'Q') {
+                    quitNavigation = true;
+                    gotInput = true;
                 }
             }
-            delay(100);
+            delay(10);
         }
-        
-        // If timeout occurred without input, auto-advance to next page
-        if (!gotInput && !quitNavigation) {
-            Serial.println("Timeout - auto-advancing to next page");
-            if (currentPage < totalPages - 1) {
-                currentPage++;
-            } else {
-                currentPage = 0; // Wrap around to first page
-            }
-        }
+        if (!gotInput) quitNavigation = true; // Timeout exits paging
     }
-    
-    // After navigation, show the first page again
-    displayPage(lines, lineCount, maxLines, 0, totalPages);
-    Serial.println("Navigation complete - showing first page");
+}
+
+// Keep the old name for compatibility if needed, but route to console or paginated
+void displayText(const char* text) {
+    if (strlen(text) > 100) { // arbitrary threshold for paginated view
+        displayPaginated(text);
+    } else {
+        displayConsole(text);
+    }
 }
 
 

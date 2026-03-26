@@ -16,18 +16,19 @@ void initializeSerial() {
 
 void runBootSequence() {
     // Show the boot sequence
-    displayBootSequence();
+    if (graphics == 1) {
+        displayBootSequence();
 
-    // Show the "Welcome" message
-    displayWelcomeMessage();
+        // Show the "Welcome" message
+        displayWelcomeMessage();
+    }
 
     // Display available resources
     // printlnOutput(getSystemStats().c_str()); removing cuz neededd really as i will shift to memory allocation on the go instead of pre allocation
     printlnOutput("Boot sequence complete");
 
-    delay(BOOT_DISPLAY_DELAY); 
+    delay(BOOT_DISPLAY_DELAY);
 }
-
 void initializeSystem() {
     // Initialize serial communication
     initializeSerial();

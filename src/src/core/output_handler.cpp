@@ -26,7 +26,8 @@ void printOutput(const char* text) {
 
 void printlnOutput(const String &text) {
     if (graphics == 1) {
-        displayText(text.c_str());
+        String withNewline = text + "\n";
+        displayText(withNewline.c_str());
     } else {
         Serial.println(text);
     }
@@ -34,7 +35,8 @@ void printlnOutput(const String &text) {
 
 void printlnOutput(const char* text) {
     if (graphics == 1) {
-        displayText(text);
+        String withNewline = String(text) + "\n";
+        displayText(withNewline.c_str());
     } else {
         Serial.println(text);
     }
