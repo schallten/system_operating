@@ -13,11 +13,11 @@ bool createEssentials(bool firstBoot){
     if (firstBoot){
         LittleFS.mkdir("/home");
         LittleFS.mkdir("/home/config"); // user stored configs here , OS doesn;t support multi users
-        LittleFS.mkdir("/history"); // history of commands run is stored in a file in this folder
-        LittleFS.mkdir("/apps"); // all bins and installed apps stored here
+        LittleFS.mkdir("/home/history"); // history of commands run is stored in a file in this folder
+        LittleFS.mkdir("/home/apps"); // all outz and installed apps stored here
         LittleFS.mkdir("/tmp"); // temporary files stored here
         // create history file
-        File historyFile = LittleFS.open("/history/commands.txt", "w");
+        File historyFile = LittleFS.open("/home/history/commands.txt", "w");
         if (historyFile) {
             historyFile.println("// Command History File");
             historyFile.close();
@@ -45,12 +45,12 @@ bool initFilesystem() {
 
 void setupFilesystemFolders(){
     // first we will create the donotdelete.txt while will contain : 1 for true ( means os is not booting for the first time ) and 0 for false ( means os is booting for the first time )
-    File configFile = LittleFS.open("/donotdelete.txt", "r");
+    File configFile = LittleFS.open("home/donotdelete.txt", "r");
     if (!configFile) {
         // file does not exist, so this is first boot
         firstBoot = true;
         // create the file and write 1 to it
-        File newConfigFile = LittleFS.open("/donotdelete.txt", "w");
+        File newConfigFile = LittleFS.open("home/donotdelete.txt", "w");
         if (newConfigFile) {
             newConfigFile.println("1");
             newConfigFile.close();

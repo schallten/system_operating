@@ -2,7 +2,7 @@
 
 ## Overview
 
-`system_operating` is an experimental, minimal operating system designed for microcontroller devices. It provides a foundation for low-level runtime management, a simple shell interface, package management, and repository-backed application deployment. The system focuses on constrained hardware, with the goal of providing an efficient, lightweight environment.
+`system_operating` is an experimental, minimal, shell-based operating system designed for microcontroller devices like the ESP8266. It provides a foundation for low-level runtime management, a comprehensive filesystem interface, declarative configuration, and basic external integrations (weather, brainfuck interpreter). The system focuses on constrained hardware, aiming to provide an efficient, lightweight environment for embedded experimentation.
 
 ---
 
@@ -10,47 +10,83 @@
 
 ### Completed
 
-* **Core Boot Sequence**: Implemented in `src/system_operating.ino`.
-* **System Initialization**: Set up in `src/core/init.h` and `src/core/init.cpp`.
-* **Shell Integration**: Basic shell entry point in `src/core/shell.h` and `src/core/shell.cpp`.
-* **Output Handling**: Managed in `src/core/output_handler.h` and `src/core/output_handler.cpp`.
-* **Configuration Constants**: Defined in `src/core/config.h`.
-* **Initial Help Command & Startup Messaging**: Basic functionality for user guidance.
+*   **Core Boot Sequence**: Fully implemented in `src/system_operating.ino` and `src/src/core/init.cpp`.
+*   **System Initialization**: Set up for Serial, Display, and LittleFS-based filesystem.
+*   **Tonic Configuration System**: Implements a declarative configuration system using `.tnc` files (located at `/home/config.tnc`) for system, network, and display settings.
+*   **Comprehensive Shell Interface**: Interactive REPL with support for system status, networking, and filesystem management.
+*   **Filesystem Integration**: Full suite of filesystem utilities (`ls`, `pwd`, `cd`, `cat`, `mkdir`, `touch`, `rm`, `rmdir`, `cp`, `mv`, `lexa`).
+*   **Output Handling**: Managed through a unified `output_handler` that supports both Serial and OLED display pagination.
+*   **Modular Architecture**: Separated into **core** (essential OS modules), **architecture** (hardware-specific details and config), and **extras** (optional utilities).
 
 ### Under Development
 
-* **Shell Command Parsing**: Building interactive REPL behavior for system control.
-* **Filesystem Support**: Enabling persistent state management and handling of package metadata.
-* **Network Functionality**: Developing functionality for repository access and downloading packages.
-* **Package Manager**: Loom is being integrated as the system's package manager, handling software deployment and updates.
-* **Validation & Verification**: Adding checksum verification and safe install workflows to ensure system integrity.
+*   **Loom Package Manager**: A planned package manager to handle installation and management of software packages.
+*   **Elin Bytecode**: A custom language/bytecode format for user-made applications, intended to be managed by Loom.
+*   **Multitasking**: Currently a non-preemptive FCFS system; future versions aim for improved process management.
+*   **Enhanced Terminal**: Further improvements to the OLED-based display management and input handling.
 
 ---
 
 ## Project Structure
 
-* **`src/system_operating.ino`**: The main entry point and setup logic for the operating system.
-* **`src/core/`**: Core OS modules including initialization, shell interface, output management, networking, and filesystem.
-* **`src/architecture/`**: Architecture-specific helpers and details.
-* **`src/extras/`**: Additional utilities and features that extend system capabilities.
-* **`website/`**: Static site content for project documentation and user access.
+*   **`src/system_operating.ino`**: The main entry point and setup logic for the operating system.
+*   **`src/src/core/`**: Core OS modules including initialization, shell interface, output management, networking, and filesystem.
+*   **`src/src/architecture/`**: Architecture-specific helpers, system details, and the Tonic configuration implementation.
+*   **`src/src/extras/`**: Additional utilities like the Brainfuck interpreter and weather/time features.
+*   **`website/`**: Static site content for project documentation.
 
 ---
 
-## Loom: The Elin Package Manager for system_operating
+## Available Commands
 
-Loom is the built-in package manager for `system_operating`, designed to handle the installation, management, and update of software packages compiled into Elin bytecode. Loom is deeply integrated into the system, offering the following features:
+| Command | Description |
+| :--- | :--- |
+| `help` | Shows the list of available commands. |
+| `clear` | Clears the screen/output. |
+| `stats` | Displays system information and memory status. |
+| `wifi` | Shows current WiFi status. |
+| `wifi setup` | Initiates the WiFi connection process. |
+| `ls` | Lists files and directories in the current path. |
+| `pwd` | Prints the current working directory. |
+| `cd <path>` | Changes the current working directory. |
+| `cat <file>` | Displays the contents of a file. |
+| `mkdir <name>` | Creates a new directory. |
+| `touch <file>` | Creates a new empty file. |
+| `rm <file>` | Removes a specified file. |
+| `rmdir <dir>` | Removes a specified directory. |
+| `cp <src> <dst>` | Copies a file to a new location. |
+| `mv <src> <dst>` | Moves or renames a file. |
+| `lexa <file> <text>` | A simple file writer/editor to create or append content. |
+| `weather` | Displays current weather information (requires credentials). |
+| `bf` | Launches the Brainfuck code interpreter. |
 
-### Key Features
+---
 
-* **Package Management**: Loom manages Elin bytecode packages, providing a registry-based approach to software distribution.
-* **Dependency Resolution**: Automatically tracks and resolves dependencies through `.tnc` configuration files, ensuring a smooth installation experience.
-* **Package Installation**: Loom fetches, installs, and updates packages directly from the repository, ensuring the system remains up to date with minimal user intervention.
-* **Backup & Recovery**: Loom provides built-in backup functionality, automatically backing up the home folder before updates to prevent data loss. This makes recovery straightforward, ensuring that even in the event of a failed update, the system can be restored safely.
+## Tonic Configuration (.tnc)
 
-### Workflow
+The system uses a declarative configuration format called Tonic. The configuration file is stored at `/home/config.tnc`.
 
-1. **Write Code**: Develop and compile code locally in Elin bytecode format.
-2. **Upload Packages**: Upload your compiled packages to the Loom repository portal.
-3. **Install & Manage Packages**: Use Loom to install and manage packages on the device, tracking dependencies and ensuring system consistency.
-4. **Backup & Recovery**: Loom automatically backs up critical system files before any update to prevent accidental data loss. You can easily recover to a previous state if needed.
+Example `config.tnc`:
+```hcl
+system {
+    hostname = "system-operating";
+    version = "1.0.0";
+}
+
+network {
+    ssid = "YourSSID";
+    password = "YourPassword";
+}
+```
+
+---
+
+## Future Goal: Loom & Elin
+
+Loom is the planned package manager for `system_operating`, designed to handle the installation and update of software packages compiled into Elin bytecode.
+
+### Key Concepts
+
+*   **Package Management**: Registry-based approach to software distribution.
+*   **Dependency Resolution**: Automatic tracking via `.tnc` configuration.
+*   **Portability**: Elin bytecode will allow user applications to run across different builds of the OS.

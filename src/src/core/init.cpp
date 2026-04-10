@@ -9,6 +9,7 @@
 #include "output_handler.h"
 #include "filesystem.h"
 #include <Arduino.h>
+#include "../architecture/config_file.h"
 
 void initializeSerial() {
     Serial.begin(SERIAL_BAUD);
@@ -51,6 +52,9 @@ void initializeSystem() {
 
     // Initialize network
     // initializeNetwork(); will switch to manual wifi allotment just in case user wants offline work too
+    printlnOutput("populating variables");
+    
+    readConfig();
 
     // Display completion message
     printlnOutput("Initial setup complete");

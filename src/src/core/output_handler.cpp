@@ -6,7 +6,7 @@
 #include <Arduino.h>
 
 // Global graphics mode: 0 = serial, 1 = display
-int graphics = 1;
+int graphics = 0;
 
 void printOutput(const String &text) {
     if (graphics == 1) {

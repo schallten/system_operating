@@ -1,90 +1,233 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>system_operating</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <header>
-            <h1>system_operating</h1>
-            <div class="tagline">A minimal embedded OS for microcontrollers</div>
-            <nav>
-                <a href="#summary">Summary</a>
-                <a href="#progress">Progress</a>
-                <a href="#loom">Loom</a>
-                <a href="https://github.com/schallten/system_operating">GitHub</a>
-            </nav>
-        </header>
-
-        <main>
-            <section id="summary">
-                <h2>Summary</h2>
-                <p>system_operating is an experimental minimal operating system for microcontroller devices. The focus is on establishing a low-level runtime foundation, with a clear path toward a simple shell, package management, and repository-backed application deployment.</p>
-            </section>
-
-            <section id="progress">
-                <h2>Current progress</h2>
-                <h3>Completed</h3>
-                <ul>
-                    <li>Core boot sequence in src/system_operating.ino</li>
-                    <li>System initialization support in src/core/init.h and src/core/init.cpp</li>
-                    <li>Shell entry integration in src/core/shell.h and src/core/shell.cpp</li>
-                    <li>Output handling in src/core/output_handler.h and src/core/output_handler.cpp</li>
-                    <li>Configuration constants defined in src/core/config.h</li>
-                    <li>Initial help command and startup messaging</li>
-                </ul>
-                <h3>Under development</h3>
-                <ul>
-                    <li>Shell command parsing and interactive REPL behavior</li>
-                    <li>Filesystem support for persistent state and package metadata</li>
-                    <li>Network functionality for repository access and downloads</li>
-                    <li>Package manager design and module implementation</li>
-                    <li>Validation, checksum verification, and safe install workflows</li>
-                </ul>
-            </section>
-
-            <section id="loom">
-                <h2>Loom — Elin Package Manager for system_operating</h2>
-                <h3>Overview</h3>
-                <p>Loom is the planned package manager for system_operating. It is intended to manage packages compiled to Elin bytecode and to support a minimal distribution model for constrained hardware.</p>
-                <h3>Planned capabilities</h3>
-                <ul>
-                    <li>Manage Elin bytecode packages using a lightweight package registry</li>
-                    <li>Update .tnc configuration files automatically to track installed packages and dependencies</li>
-                    <li>Resolve package dependencies declared in .tnc files</li>
-                    <li>Download and install packages from a web-based repository</li>
-                    <li>Provide backup and recovery support through a central Loom repository portal</li>
-                </ul>
-                <h3>Intended workflow</h3>
-                <ol>
-                    <li>Write code locally in Elin and compile it to bytecode.</li>
-                    <li>Upload compiled bytecode to the Loom repository portal.</li>
-                    <li>Use Loom to fetch, install, and manage packages on the device.</li>
-                    <li>Maintain system state through .tnc configuration files.</li>
-                </ol>
-                <h3>Technical focus</h3>
-                <p>Loom is designed around minimalism and efficiency. The goal is to support extremely limited environments, targeting small memory footprints and a declarative package model with a repository-backed backup strategy.</p>
-            </section>
-
-            <hr>
-
-            <section>
-                <h2>Repository</h2>
-                <p><a href="https://github.com/schallten/system_operating">github.com/schallten/system_operating</a> — early prototype, actively developed.</p>
-                <div class="code-block">
-                    $ git clone https://github.com/schallten/system_operating.git<br>
-                    $ # open with Arduino IDE or PlatformIO<br>
-                    $ # flash to ESP8266 (Wemos D1 mini recommended)
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>system_operating</title>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>system_operating</h1>
+                <div class="tagline">
+                    A minimal embedded OS for microcontrollers
                 </div>
-            </section>
-        </main>
+                <nav>
+                    <a href="#summary">Summary</a>
+                    <a href="#progress">Progress</a>
+                    <a href="#loom">Loom</a>
+                    <a href="https://github.com/schallten/system_operating"
+                        >GitHub</a
+                    >
+                </nav>
+            </header>
 
-        <footer>
-            <p>This project is currently a work in progress. The repository demonstrates an early OS prototype rather than a complete package manager or application platform.</p>
-        </footer>
-    </div>
-</body>
+            <main>
+                <section id="summary">
+                    <h2>Summary</h2>
+                    <p>
+                        system_operating is an experimental minimal operating
+                        system for microcontroller devices. The focus is on
+                        establishing a low-level runtime foundation, with a
+                        clear path toward a simple shell, package management,
+                        and repository-backed application deployment.
+                    </p>
+                </section>
+
+                <section id="progress">
+                    <h2>Current progress</h2>
+                    <h3>Completed</h3>
+                    <ul>
+                        <li>Core boot sequence and system initialization</li>
+                        <li>
+                            Tonic Configuration System (.tnc) for declarative
+                            settings
+                        </li>
+                        <li>
+                            Interactive Shell with comprehensive command support
+                        </li>
+                        <li>
+                            Full Filesystem Integration (LittleFS) with
+                            unix-like utilities
+                        </li>
+                        <li>
+                            Output handling with Serial and OLED display
+                            pagination
+                        </li>
+                        <li>
+                            Modular Architecture (Core, Architecture, Extras)
+                        </li>
+                    </ul>
+                    <h3>Under development</h3>
+                    <ul>
+                        <li>Loom Package Manager for software distribution</li>
+                        <li>
+                            Elin Bytecode format for custom user applications
+                        </li>
+                        <li>
+                            Process management and non-preemptive multitasking
+                        </li>
+                        <li>Improved display and input handling</li>
+                    </ul>
+                </section>
+
+                <section id="commands">
+                    <h2>Available Commands</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Command</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><code>help</code></td>
+                                <td>Shows available commands</td>
+                            </tr>
+                            <tr>
+                                <td><code>stats</code></td>
+                                <td>System and memory status</td>
+                            </tr>
+                            <tr>
+                                <td><code>wifi setup</code></td>
+                                <td>Configure WiFi connection</td>
+                            </tr>
+                            <tr>
+                                <td><code>ls / cd / pwd</code></td>
+                                <td>Filesystem navigation</td>
+                            </tr>
+                            <tr>
+                                <td><code>mkdir / touch</code></td>
+                                <td>Create folders and files</td>
+                            </tr>
+                            <tr>
+                                <td><code>rm / cp / mv</code></td>
+                                <td>File management</td>
+                            </tr>
+                            <tr>
+                                <td><code>lexa</code></td>
+                                <td>Simple file writer/editor</td>
+                            </tr>
+                            <tr>
+                                <td><code>bf</code></td>
+                                <td>Brainfuck interpreter</td>
+                            </tr>
+                            <tr>
+                                <td><code>weather</code></td>
+                                <td>Weather info (needs credentials)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </section>
+
+                <section id="tonic">
+                    <h2>Tonic Configuration (.tnc)</h2>
+                    <p>
+                        The system uses a declarative configuration format
+                        called Tonic. The configuration file is stored at
+                        <code>/home/config.tnc</code>.
+                    </p>
+                    <div class="code-block">
+                        system {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;hostname =
+                        "system-operating";<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;version = "1.0.0";<br />
+                        }<br />
+                        <br />
+                        network {<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;ssid = "YourSSID";<br />
+                        &nbsp;&nbsp;&nbsp;&nbsp;password = "YourPassword";<br />
+                        }
+                    </div>
+                </section>
+
+                <section id="loom">
+                    <h2>Loom & Elin — Future Roadmap</h2>
+                    <h3>Overview</h3>
+                    <p>
+                        Loom is the planned package manager for
+                        system_operating. It is intended to manage packages
+                        compiled to Elin bytecode and to support a minimal
+                        distribution model for constrained hardware.
+                    </p>
+                    <h3>Planned capabilities</h3>
+                    <ul>
+                        <li>
+                            Manage Elin bytecode packages using a lightweight
+                            package registry
+                        </li>
+                        <li>
+                            Update .tnc configuration files automatically to
+                            track installed packages and dependencies
+                        </li>
+                        <li>
+                            Resolve package dependencies declared in .tnc files
+                        </li>
+                        <li>
+                            Download and install packages from a web-based
+                            repository
+                        </li>
+                        <li>
+                            Provide backup and recovery support through a
+                            central Loom repository portal
+                        </li>
+                    </ul>
+                    <h3>Intended workflow</h3>
+                    <ol>
+                        <li>
+                            Write code locally in Elin and compile it to
+                            bytecode.
+                        </li>
+                        <li>
+                            Upload compiled bytecode to the Loom repository
+                            portal.
+                        </li>
+                        <li>
+                            Use Loom to fetch, install, and manage packages on
+                            the device.
+                        </li>
+                        <li>
+                            Maintain system state through .tnc configuration
+                            files.
+                        </li>
+                    </ol>
+                    <h3>Technical focus</h3>
+                    <p>
+                        Loom is designed around minimalism and efficiency. The
+                        goal is to support extremely limited environments,
+                        targeting small memory footprints and a declarative
+                        package model with a repository-backed backup strategy.
+                    </p>
+                </section>
+
+                <hr />
+
+                <section>
+                    <h2>Repository</h2>
+                    <p>
+                        <a href="https://github.com/schallten/system_operating"
+                            >github.com/schallten/system_operating</a
+                        >
+                        — early prototype, actively developed.
+                    </p>
+                    <div class="code-block">
+                        $ git clone
+                        https://github.com/schallten/system_operating.git<br />
+                        $ # open with Arduino IDE or PlatformIO<br />
+                        $ # flash to ESP8266 (Wemos D1 mini recommended)
+                    </div>
+                </section>
+            </main>
+
+            <footer>
+                <p>
+                    This project is currently a work in progress. The repository
+                    demonstrates an early OS prototype rather than a complete
+                    package manager or application platform.
+                </p>
+            </footer>
+        </div>
+    </body>
 </html>
